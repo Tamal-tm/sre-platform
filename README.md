@@ -29,8 +29,6 @@ flowchart TD
 ```
 
 
-Here’s the **ready‑to‑paste README section** with your WSL2 deployment steps formatted cleanly:
-
 ```markdown
 ## Deployment Steps (WSL2)
 
@@ -70,29 +68,21 @@ Here’s the **ready‑to‑paste README section** with your WSL2 deployment ste
    kubectl get pods -n monitoring
    curl http://<elastic-ip>:30080/greet
    ```
-```
-
 
 6. **Teardown & Cost — sre-platform**
-    ```bash
--Single t3.medium EC2 instance (~$0.0416/hr in ap-south-1, ~$30/month if left
--running continuously). Stopped, not destroyed, between sessions — preserves
--EBS volume and k3s state at $0 compute cost (only ~$0.08/GB-month EBS storage).
-    ```
+   - Single **t3.medium EC2 instance** (~$0.0416/hr in ap-south-1, ~$30/month if left running continuously).  
+   - Stopped, not destroyed, between sessions — preserves EBS volume and k3s state at $0 compute cost (only ~$0.08/GB-month EBS storage).
+
+   ```bash
+   # Stop between sessions (no compute charge, state preserved)
+   aws ec2 stop-instances --instance-ids <instance-id>
+
+   # Resume a session
+   aws ec2 start-instances --instance-ids <instance-id>
+
+   # Full teardown (only if permanently done)
+   cd terraform && terraform destroy
+   ```
+
+   **Note:** The EC2 Security Group’s SSH rule was temporarily widened to `0.0.0.0/0` on port 22 during Day 6 due to a dynamic home ISP IP repeatedly invalidating the rule. This should be narrowed back down (or the instance torn down) before treating this as anything beyond a personal portfolio sandbox.
 ```
-```bash
-# Stop between sessions (no compute charge, state preserved)
-aws ec2 stop-instances --instance-ids <instance-id>
-
-# Resume a session
-aws ec2 start-instances --instance-ids <instance-id>
-
-# Full teardown (only if permanently done)
-cd terraform && terraform destroy
-```
-
-**Note:** the EC2 Security Group's SSH rule was temporarily widened to
-0.0.0.0/0 on port 22 during Day 6 due to a dynamic home ISP IP repeatedly
-invalidating the rule. This should be narrowed back down (or the instance
-torn down) before treating this as anything beyond a personal portfolio
-sandbox.
