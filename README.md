@@ -62,7 +62,7 @@ Single t3.medium EC2 instance (~$0.0416/hr in ap-south-1, ~$30/month if left
 running continuously). Stopped, not destroyed, between sessions — preserves
 EBS volume and k3s state at $0 compute cost (only ~$0.08/GB-month EBS storage).
 
-\`\`\`bash
+```bash
 # Stop between sessions (no compute charge, state preserved)
 aws ec2 stop-instances --instance-ids <instance-id>
 
@@ -71,7 +71,7 @@ aws ec2 start-instances --instance-ids <instance-id>
 
 # Full teardown (only if permanently done)
 cd terraform && terraform destroy
-\`\`\`
+```
 
 **Note:** the EC2 Security Group's SSH rule was temporarily widened to
 0.0.0.0/0 on port 22 during Day 6 due to a dynamic home ISP IP repeatedly
