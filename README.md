@@ -29,32 +29,49 @@ flowchart TD
 ```
 
 
-# on WSL2 (tamal@Mrinal)
--git clone https://github.com/Tamal-tm/sre-platform.git
--cd sre-platform/terraform
--terraform init
--terraform apply   # creates VPC, subnet, SG, EC2 (t3.medium), Elastic IP, S3 backend + DynamoDB lock
+Here’s the **ready‑to‑paste README section** with your WSL2 deployment steps formatted cleanly:
 
-# SSH in and verify k3s
--ssh -i <your-key>.pem ubuntu@<elastic-ip>
--sudo k3s kubectl get nodes
+```markdown
+## Deployment Steps (WSL2)
 
-# Bootstrap ArgoCD
--kubectl create namespace argocd
--kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
--kubectl apply -f argocd-app.yaml   # Application watching sre-platform-manifests repo's base/ path
+1. **Clone the repo and provision infra**
+   ```bash
+   git clone https://github.com/Tamal-tm/sre-platform.git
+   cd sre-platform/terraform
+   terraform init
+   terraform apply   # creates VPC, subnet, SG, EC2 (t3.medium), Elastic IP, S3 backend + DynamoDB lock
+   ```
 
-# Install observability stack (namespace: monitoring, NOT sre-platform)
--export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
--helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
--helm repo add grafana https://grafana.github.io/helm-charts
--helm install monitoring prometheus-community/kube-prometheus-stack -n monitoring --create-namespace
--helm install loki grafana/loki-stack -n monitoring --set loki.image.tag=2.9.8
+2. **SSH into EC2 and verify k3s**
+   ```bash
+   ssh -i <your-key>.pem ubuntu@<elastic-ip>
+   sudo k3s kubectl get nodes
+   ```
 
-# Verify
--kubectl get pods -n sre-platform
--kubectl get pods -n monitoring
--curl http://<elastic-ip>:30080/greet
+3. **Bootstrap ArgoCD**
+   ```bash
+   kubectl create namespace argocd
+   kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+   kubectl apply -f argocd-app.yaml   # Application watching sre-platform-manifests repo's base/ path
+   ```
+
+4. **Install observability stack (namespace: monitoring)**
+   ```bash
+   export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+   helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+   helm repo add grafana https://grafana.github.io/helm-charts
+   helm install monitoring prometheus-community/kube-prometheus-stack -n monitoring --create-namespace
+   helm install loki grafana/loki-stack -n monitoring --set loki.image.tag=2.9.8
+   ```
+
+5. **Verify deployments**
+   ```bash
+   kubectl get pods -n sre-platform
+   kubectl get pods -n monitoring
+   curl http://<elastic-ip>:30080/greet
+   ```
+```
+
 
 ## Teardown & Cost — sre-platform
 
