@@ -1,3 +1,16 @@
+## Repo structure
+
+This project is split across four repos, following a GitOps pattern:
+
+| Repo | Contains | Role |
+|---|---|---|
+| [`sre-platform`](https://github.com/Tamal-tm/sre-platform) | Terraform (VPC, EC2, SG, EIP, S3 remote state), k3s/ArgoCD bootstrap | Infra-as-code — provisions the foundation everything else runs on |
+| [`sre-platform-app`](https://github.com/Tamal-tm/sre-platform-app) | `service-a`, `service-b` source code, SLO definition | Application code — the two services being observed |
+| [`sre-platform-manifests`](https://github.com/Tamal-tm/sre-platform-manifests) | Kubernetes manifests (Deployments, Services, PrometheusRules) | Deployment source of truth — ArgoCD watches this repo and syncs the cluster to match it |
+| [`ai-incident-copilot`](https://github.com/Tamal-tm/ai-incident-copilot) | Lambda (container image), Terraform for API Gateway/Lambda, FAISS + runbooks | Consumes Project 1's alerts via Alertmanager webhook, auto-generates an AI diagnosis in Slack |
+
+**Why split this way:** it mirrors how a real GitOps setup separates concerns — infra provisioning, application code, and *desired cluster state* are three different lifecycles with three different change cadences. `sre-platform-manifests` in particular exists as its own repo specifically because ArgoCD needs a Git source to reconcile against that's independent of where the application code itself lives — that's what makes it "GitOps" rather than just "CI/CD."
+
 ## Architecture
 
 ```mermaid
