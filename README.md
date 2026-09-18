@@ -1,6 +1,6 @@
 ## Architecture
 
-\`\`\`mermaid
+```mermaid
 flowchart TD
     subgraph AWS["AWS ap-south-1"]
         subgraph EC2["EC2 (t3.medium, k3s)"]
@@ -26,7 +26,7 @@ flowchart TD
     ARGO -->|watches base/| MANIFESTS["sre-platform-manifests repo"]
     ARGO -->|syncs, self-heals drift| EC2
     TF["Terraform<br/>(sre-platform repo)"] -->|provisions| EC2
-\`\`\`
+```
 
 
 # on WSL2 (tamal@Mrinal)
